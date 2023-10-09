@@ -22,7 +22,7 @@ def scrapeuser(userName):
     info['name'] = soup.find(class_ = 'username').get_text()
     #image
     info['image_url'] =  soup.find(class_ = 'avatar').findChildren("img", recursive=True)[0]['src']
-    info['DateJoined'] = soup.find(class_= 'date').get_text()
+    info['date_joined'] = soup.find(class_= 'date').get_text()
     info["followers"] = soup.find(class_="from-pagination-links-entries-stream-profile").select("li:nth-child(4)")[0].a.get_text().split()[-1]
 
     last_actions = soup.find_all('section', class_='entry')
@@ -51,9 +51,9 @@ def scrapeuser(userName):
     return info, pd.DataFrame(actions_all)
 
 st.title("Scraping Wykop.pl")
-st.write("Wpisz nazwę uzytkownika, aby pobrac informacje na jego temat.")
+st.write("Enter a Wykop.pl username to scrape")
 
-user = st.text_input('Nazwa uzytkownika')
+user = st.text_input('Username')
 
 if user != '':
     try:
@@ -62,7 +62,7 @@ if user != '':
         csv = convert_df_to_csv(actions)
 
         st.download_button(
-        "Ściągnij pobrane dane o akcjach uzytkownika",
+        "Download user's recent activities data",
         csv,
         "file.csv",
         "text/csv",
@@ -79,7 +79,7 @@ if user != '':
             else:
                 st.image(value)
         
-        st.write("Ostatnie akcje")
+        st.write("Recent activities")
         st.table(actions)
 
 
